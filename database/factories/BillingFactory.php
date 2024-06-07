@@ -2,11 +2,11 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use App\Models\;
+use App\Enums\BillingStatus;
 use App\Models\Billing;
 use App\Models\Customer;
+use App\Models\Order;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class BillingFactory extends Factory
 {
@@ -24,10 +24,10 @@ class BillingFactory extends Factory
     {
         return [
             'customer_id' => Customer::factory(),
-            'order_id' => ::factory(),
-            'total_amount' => $this->faker->numberBetween(-10000, 10000),
+            'order_id' => Order::factory(),
+            'total_amount' => $this->faker->numberBetween(10000, 100000),
             'billing_date' => $this->faker->date(),
-            'status' => $this->faker->word(),
+            'status' => $this->faker->boolean,
         ];
     }
 }

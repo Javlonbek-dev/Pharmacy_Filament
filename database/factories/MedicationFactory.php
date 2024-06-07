@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Dosage_Form;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Medication;
@@ -24,7 +25,7 @@ class MedicationFactory extends Factory
             'name' => $this->faker->name(),
             'description' => $this->faker->text(),
             'manufacturer' => $this->faker->word(),
-            'dosage_form' => $this->faker->text(),
+            'dosage_form' => $this->faker->randomElement(Dosage_Form::class),
             'strength' => $this->faker->word(),
             'price' => $this->faker->randomFloat(0, 0, 9999999999.),
         ];

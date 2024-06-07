@@ -23,7 +23,7 @@ class CustomerFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'address' => $this->faker->word(),
+            'address' => $this->faker->address(),
             'phone_number' => $this->faker->phoneNumber(),
             'date_of_birth' => $this->faker->date(),
         ];

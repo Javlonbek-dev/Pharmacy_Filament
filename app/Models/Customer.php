@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,8 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Customer extends Model
 {
-    use HasFactory;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -18,10 +21,13 @@ class Customer extends Model
      */
     protected $fillable = [
         'user_id',
+        'full_name',
         'address',
         'phone_number',
         'date_of_birth',
     ];
+
+    use HasFactory;
 
     /**
      * The attributes that should be cast to native types.
@@ -52,5 +58,40 @@ class Customer extends Model
     public function billings(): HasMany
     {
         return $this->hasMany(Billing::class);
+    }
+
+    public static function getForm(): array
+    {
+        return [
+            Select::make('user_id')
+                ->relationship('user', 'name'),
+            TextInput::make('address')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('phone_number')
+                ->tel()
+                ->required(),
+            DateTimePicker::make('date_of_birth')
+                ->required(),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill with Factory Data ')
+                    ->visible(function (string $operation){
+                        if($operation !== 'create'){
+                            return false;
+                        }
+                        if(!app()->environment('local')){
+                            return false;
+                        }
+                        return true;
+                    })
+                    ->action(function ($livewire) {
+                        $data = Customer::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ]),
+
+        ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Customer;
@@ -24,8 +25,8 @@ class OrderFactory extends Factory
         return [
             'customer_id' => Customer::factory(),
             'order_date' => $this->faker->date(),
-            'total_amount' => $this->faker->numberBetween(-10000, 10000),
-            'status' => $this->faker->word(),
+            'total_amount' => $this->faker->numberBetween(10000, 10000),
+            'status' => $this->faker->randomElement(Status::class),
         ];
     }
 }

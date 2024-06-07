@@ -2,6 +2,12 @@
 
 namespace App\Models;
 
+use App\Enums\Status;
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,5 +59,45 @@ class Order extends Model
     public function billing(): HasOne
     {
         return $this->hasOne(Billing::class);
+    }
+
+    public function received(): void
+    {
+        $this->status = Status::Received;
+
+        $this->save();
+    }
+
+    public function cancelled(): void
+    {
+        $this->status = Status::Cancelled;
+
+        $this->save();
+    }
+    public static function getForm()
+    {
+        return [
+            Select::make('customer_id')
+                ->relationship('customer.user', 'name'),
+            DatePicker::make('order_date')
+                ->required(),
+            TextInput::make('total_amount')
+                ->required()
+                ->numeric(),
+            Select::make('status')
+                ->required()
+                ->enum(Status::class)
+                ->options(Status::class),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill  with Factory data')
+                    ->color('info')
+                    ->action(function ($livewire) {
+                        $data = Order::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ])
+        ];
     }
 }

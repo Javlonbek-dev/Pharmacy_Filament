@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\PrescriptionItemResource\Pages;
 use App\Filament\Resources\PrescriptionItemResource\RelationManagers;
+use App\Models\Prescription_Item;
 use App\Models\PrescriptionItem;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PrescriptionItemResource extends Resource
 {
-    protected static ?string $model = PrescriptionItem::class;
+    protected static ?string $model = Prescription_Item::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

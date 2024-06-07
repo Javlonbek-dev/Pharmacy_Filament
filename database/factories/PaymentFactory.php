@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Payment_Method;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Order;
@@ -24,8 +25,8 @@ class PaymentFactory extends Factory
         return [
             'order_id' => Order::factory(),
             'payment_date' => $this->faker->date(),
-            'payment_method' => $this->faker->word(),
-            'amount' => $this->faker->numberBetween(-10000, 10000),
+            'payment_method' => $this->faker->randomElement(Payment_Method::class),
+            'amount' => $this->faker->numberBetween(1, 10000),
         ];
     }
 }

@@ -2,16 +2,16 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Status;
 use App\Filament\Resources\PaymentResource\Pages;
 use App\Filament\Resources\PaymentResource\RelationManagers;
 use App\Models\Payment;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class PaymentResource extends Resource
 {
@@ -22,32 +22,22 @@ class PaymentResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('order_id')
-                    ->relationship('order', 'id'),
-                Forms\Components\DatePicker::make('payment_date')
-                    ->required(),
-                Forms\Components\TextInput::make('payment_method')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric(),
-            ]);
+            ->schema(Payment::getForm());
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order.id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('order.status')
+                    ->badge()
+                    ->color(function ($state) {
+                        return Status::from($state)->getColor();
+                    })
                     ->sortable(),
                 Tables\Columns\TextColumn::make('payment_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_method')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
                     ->numeric()
                     ->sortable(),
@@ -59,9 +49,22 @@ class PaymentResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
+                Tables\Columns\IconColumn::make('payment_method')
+                    ->icon(function (Payment $record) {
+                        if ($record->payment_method === 'Credit_Card') {
+                            return 'heroicon-o-credit-card';
+                        }
+                        if ($record->payment_method === 'Cash') {
+                            return 'heroicon-o-banknotes';
+                        }
+                        return '';
+                    })
+                    ->searchable(),
             ])
             ->filters([
-                //
+                Filter::make('payment_method')
+                    ->query(fn(Builder $query): Builder => $query->where('payment_method', true))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

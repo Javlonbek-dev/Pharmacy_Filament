@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\Status;
 use App\Filament\Resources\OrderItemResource\Pages;
 use App\Filament\Resources\OrderItemResource\RelationManagers;
 use App\Models\OrderItem;
@@ -22,28 +23,19 @@ class OrderItemResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('order_id')
-                    ->relationship('order', 'id'),
-                Forms\Components\Select::make('medication_id')
-                    ->relationship('medication', 'name'),
-                Forms\Components\TextInput::make('quantity')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('$'),
-            ]);
+            ->schema(OrderItem::getForm());
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('order.id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('order.status')
+                    ->label('Order Status')
+                    ->sortable()
+                ->color(function ($state){
+                    return Status::from($state)->getColor();
+                }),
                 Tables\Columns\TextColumn::make('medication.name')
                     ->numeric()
                     ->sortable(),

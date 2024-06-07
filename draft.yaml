@@ -1,0 +1,146 @@
+models:
+  User:
+    name: string
+    email: string
+    password: string
+    role: string
+    relationships:
+      hasOne: Customer, Pharmacist
+      hasMany: AuditLog
+
+  Customer:
+    user_id: unsignedInteger nullable
+    address: string
+    phone_number: integer
+    date_of_birth: date
+    relationships:
+      belongsTo: User
+      hasMany: Prescription, Order,Billing
+
+  Pharmacist:
+    user_id: unsignedInteger nullable
+    license_number: string
+    employment_date: date
+    relationships:
+      belongsTo: User
+      hasMany: Prescription
+
+  Medication:
+    name: string
+    description: string
+    manufacturer: string
+    dosage_form: text
+    strength: string
+    price: float
+    relationships:
+      hasMany: PrescriptionItem, OrderItem, ShipmentItem
+      hasOne: Inventory
+
+  Prescription:
+    customer_id: unsignedInteger nullable
+    pharmacist_id: unsignedInteger nullable
+    prescription_date: date
+    doctor_name: string
+    total_amount: float
+    relationships:
+      belongsTo: Customer, Pharmacist
+      hasMany: PrescriptionItem
+
+  Prescription_Item:
+    prescription_id: unsignedInteger nullable
+    medication_id: unsignedInteger nullable
+    quantity: integer
+    dosage: integer
+    frequency: integer
+    relationships:
+      belongsTo: Prescription, Medication
+
+  Inventory:
+    medication_id: unsignedInteger nullable
+    quantity_in_stock: string
+    reorder_level: string
+    relationships:
+      belongsTo: Medication
+
+  Order:
+    customer_id: unsignedInteger nullable
+    order_date: date
+    total_amount: integer
+    status: string
+    relationships:
+      belongsTo: Customer
+      hasMany: OrderItem
+      hasOne: Payment, Billing
+
+  OrderItem:
+    order_id: unsignedInteger nullable
+    medication_id: unsignedInteger nullable
+    quantity: integer
+    price: integer
+    relationships:
+      belongsTo: Order, Medication
+
+  Supplier:
+    name: string
+    contact_person: string
+    phone_number: integer
+    address: string
+    relationships:
+      hasMany: Shipment
+
+  Shipment:
+    supplier_id: unsignedInteger nullable
+    shipment_date: date
+    received_date: date
+    status: string
+    relationships:
+      belongsTo: Supplier
+      hasMany: ShipmentItem
+
+  ShipmentItem:
+    shipment_id: unsignedInteger nullable
+    medication_id: unsignedInteger nullable
+    quantity: integer
+    cost_price: integer
+    relationships:
+      belongsTo: Shipment, Medication
+
+  Payment:
+    order_id: unsignedInteger nullable
+    payment_date: date
+    payment_method: string
+    amount: integer
+    relationships:
+      belongsTo: Order
+
+  Billing:
+    customer_id: unsignedInteger nullable
+    order_id: unsignedInteger nullable
+    total_amount: integer
+    billing_date: date
+    status: string
+    relationships:
+      belongsTo: Customer, Order
+
+  Role:
+    role_name: string
+    relationships:
+      hasMany: Permission
+
+  Permissions:
+    role_id: unsignedInteger nullable
+    permission: string
+    relationships:
+      belongsTo: Role
+
+  Audit_Log:
+    user_id: unsignedInteger nullable
+    action: string
+    timestamp: date
+    description: string
+    relationships:
+      belongsTo: User
+
+
+controllers:
+# ...

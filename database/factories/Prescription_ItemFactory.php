@@ -7,7 +7,7 @@ use App\Models\Prescription;
 use App\Models\Prescription_Item;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class PrescriptionItemFactory extends Factory
+class Prescription_ItemFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.

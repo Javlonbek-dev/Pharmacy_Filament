@@ -23,7 +23,7 @@ class PharmacistFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'license_number' => $this->faker->word(),
+            'license_number' => $this->faker->randomNumber(6),
             'employment_date' => $this->faker->date(),
         ];
     }

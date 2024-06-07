@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,5 +45,32 @@ class OrderItem extends Model
     public function medication(): BelongsTo
     {
         return $this->belongsTo(Medication::class);
+    }
+
+    public static function getForm()
+    {
+        return [
+            Select::make('order_id')
+                ->relationship('order', 'id'),
+            Select::make('medication_id')
+                ->relationship('medication', 'name'),
+            TextInput::make('quantity')
+                ->required()
+                ->numeric(),
+            TextInput::make('price')
+                ->required()
+                ->numeric()
+                ->prefix('$'),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill  with Factory data')
+                    ->color('info')
+                    ->action(function ($livewire) {
+                        $data = OrderItem::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ])
+        ];
     }
 }

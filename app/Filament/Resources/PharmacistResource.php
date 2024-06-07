@@ -22,15 +22,7 @@ class PharmacistResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('user_id')
-                    ->relationship('user', 'name'),
-                Forms\Components\TextInput::make('license_number')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('employment_date')
-                    ->required(),
-            ]);
+            ->schema(Pharmacist::getForm());
     }
 
     public static function table(Table $table): Table

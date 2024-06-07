@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Medication;
+use App\Models\Shipment;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('shipment_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('shipment_id')->nullable();
-            $table->foreignId('medication_id')->nullable();
+            $table->foreignIdFor(Shipment::class)->nullable();
+            $table->foreignIdFor(Medication::class)->nullable();
             $table->integer('quantity');
             $table->integer('cost_price');
             $table->timestamps();

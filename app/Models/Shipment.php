@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use App\Enums\ShipmentStatus;
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -43,5 +48,31 @@ class Shipment extends Model
     public function shipmentItems(): HasMany
     {
         return $this->hasMany(ShipmentItem::class);
+    }
+
+    public static function getForm()
+    {
+        return [
+            Select::make('supplier_id')
+                ->relationship('supplier', 'name'),
+            DateTimePicker::make('shipment_date')
+                ->required(),
+            DateTimePicker::make('received_date')
+                ->required(),
+            Select::make('status')
+                ->required()
+                ->enum(ShipmentStatus::class)
+                ->options(ShipmentStatus::class),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill  with Factory data')
+                    ->color('info')
+                    ->action(function ($livewire) {
+                        $data = Shipment::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ])
+        ];
     }
 }

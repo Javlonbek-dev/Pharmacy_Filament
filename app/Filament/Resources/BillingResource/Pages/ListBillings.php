@@ -10,6 +10,13 @@ class ListBillings extends ListRecords
 {
     protected static string $resource = BillingResource::class;
 
+    protected function getHeaderWidgets(): array
+    {
+        return [
+          BillingResource\Widgets\StatsOverview::class
+        ];
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Medication;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('inventories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('medication_id')->nullable();
+            $table->foreignIdFor(Medication::class)->nullable();
             $table->string('quantity_in_stock');
             $table->string('reorder_level');
             $table->timestamps();

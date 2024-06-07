@@ -2,6 +2,10 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,5 +38,29 @@ class Inventory extends Model
     public function medication(): BelongsTo
     {
         return $this->belongsTo(Medication::class);
+    }
+
+    protected static function getForm(): array
+    {
+        return [
+            Select::make('medication_id')
+                ->relationship('medication', 'name'),
+            TextInput::make('quantity_in_stock')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('reorder_level')
+                ->required()
+                ->maxLength(255),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill  with Factory data')
+                    ->color('info')
+                    ->action(function ($livewire) {
+                        $data = Inventory::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ])
+        ];
     }
 }

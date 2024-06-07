@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ShipmentItemResource\Pages;
 use App\Filament\Resources\ShipmentItemResource\RelationManagers;
+use App\Models\Shipment;
 use App\Models\ShipmentItem;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -22,18 +23,7 @@ class ShipmentItemResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('shipment_id')
-                    ->relationship('shipment', 'id'),
-                Forms\Components\Select::make('medication_id')
-                    ->relationship('medication', 'name'),
-                Forms\Components\TextInput::make('quantity')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('cost_price')
-                    ->required()
-                    ->numeric(),
-            ]);
+            ->schema(ShipmentItem::getForm());
     }
 
     public static function table(Table $table): Table

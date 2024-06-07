@@ -2,6 +2,11 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -41,5 +46,28 @@ class Pharmacist extends Model
     public function prescriptions(): HasMany
     {
         return $this->hasMany(Prescription::class);
+    }
+
+    public static function getForm()
+    {
+        return [
+            Select::make('user_id')
+                ->relationship('user', 'name'),
+            TextInput::make('license_number')
+                ->required()
+                ->maxLength(255),
+            DatePicker::make('employment_date')
+                ->required(),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill  with Factory data')
+                    ->color('info')
+                    ->action(function ($livewire) {
+                        $data = Pharmacist::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ])
+        ];
     }
 }

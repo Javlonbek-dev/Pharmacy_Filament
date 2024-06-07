@@ -22,21 +22,7 @@ class SupplierResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('contact_person')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('phone_number')
-                    ->tel()
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('address')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema(Supplier::getForm());
     }
 
     public static function table(Table $table): Table

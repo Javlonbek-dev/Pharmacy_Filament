@@ -2,6 +2,12 @@
 
 namespace App\Models;
 
+use Filament\Forms\Components\Actions;
+use Filament\Forms\Components\Actions\Action;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -49,6 +55,35 @@ class Prescription extends Model
 
     public function prescriptionItems(): HasMany
     {
-        return $this->hasMany(PrescriptionItem::class);
+        return $this->hasMany(Prescription_Item::class);
+    }
+
+    public static function getForm()
+    {
+        return [
+            Select::make('customer_id')
+                ->relationship('customer', 'full_name'),
+            Select::make('pharmacist_id')
+                ->label('Pharmacist License Number')
+                ->relationship('pharmacist', 'license_number'),
+            DateTimePicker::make('prescription_date')
+                ->required(),
+            TextInput::make('doctor_name')
+                ->required()
+                ->maxLength(255),
+            TextInput::make('total_amount')
+                ->required()
+                ->numeric(),
+            Actions::make([
+                Action::make('star')
+                    ->icon('heroicon-m-star')
+                    ->label('Fill  with Factory data')
+                    ->color('info')
+                    ->action(function ($livewire) {
+                        $data = Prescription::factory()->make()->toArray();
+                        $livewire->form->fill($data);
+                    }),
+            ])
+        ];
     }
 }

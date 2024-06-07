@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ShipmentStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Shipment;
@@ -25,7 +26,7 @@ class ShipmentFactory extends Factory
             'supplier_id' => Supplier::factory(),
             'shipment_date' => $this->faker->date(),
             'received_date' => $this->faker->date(),
-            'status' => $this->faker->word(),
+            'status' => $this->faker->randomElement(ShipmentStatus::class),
         ];
     }
 }

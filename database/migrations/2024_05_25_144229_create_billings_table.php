@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,11 +15,11 @@ return new class extends Migration
     {
         Schema::create('billings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->nullable();
-            $table->foreignId('order_id')->nullable();
+            $table->foreignIdFor(Customer::class)->nullable();
+            $table->foreignIdFor(Order::class)->nullable();
             $table->integer('total_amount');
             $table->date('billing_date');
-            $table->string('status');
+            $table->boolean('status');
             $table->timestamps();
         });
     }

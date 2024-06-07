@@ -4,49 +4,35 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\BillingResource\Pages;
 use App\Filament\Resources\BillingResource\RelationManagers;
+use App\Filament\Resources\BillingResource\Widgets\BillingChart;
 use App\Models\Billing;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class BillingResource extends Resource
 {
     protected static ?string $model = Billing::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('customer_id')
-                    ->relationship('customer', 'id'),
-                Forms\Components\Select::make('order_id')
-                    ->relationship('order', 'id'),
-                Forms\Components\TextInput::make('total_amount')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\DatePicker::make('billing_date')
-                    ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema(Billing::getForm());
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('customer.id')
+                Tables\Columns\TextColumn::make('customer.user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('order.id')
+                Tables\Columns\TextColumn::make('order.order_date')
                     ->numeric()
+                    ->label('Order Date')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_amount')
                     ->numeric()
@@ -54,16 +40,9 @@ class BillingResource extends Resource
                 Tables\Columns\TextColumn::make('billing_date')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('status')
+                    ->label('Payment Status')
+                    ->boolean()
             ])
             ->filters([
                 //
@@ -82,6 +61,13 @@ class BillingResource extends Resource
     {
         return [
             //
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+          BillingChart::class
         ];
     }
 

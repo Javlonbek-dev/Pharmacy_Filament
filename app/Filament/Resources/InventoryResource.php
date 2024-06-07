@@ -22,16 +22,7 @@ class InventoryResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('medication_id')
-                    ->relationship('medication', 'name'),
-                Forms\Components\TextInput::make('quantity_in_stock')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('reorder_level')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema(Inventory::getForm());
     }
 
     public static function table(Table $table): Table

@@ -1,0 +1,70 @@
+created:
+    - database/factories/UserFactory.php
+    - database/factories/CustomerFactory.php
+    - database/factories/PharmacistFactory.php
+    - database/factories/MedicationFactory.php
+    - database/factories/PrescriptionFactory.php
+    - database/factories/PrescriptionItemFactory.php
+    - database/factories/InventoryFactory.php
+    - database/factories/OrderFactory.php
+    - database/factories/OrderItemFactory.php
+    - database/factories/SupplierFactory.php
+    - database/factories/ShipmentFactory.php
+    - database/factories/ShipmentItemFactory.php
+    - database/factories/PaymentFactory.php
+    - database/factories/BillingFactory.php
+    - database/factories/RoleFactory.php
+    - database/factories/PermissionsFactory.php
+    - database/factories/AuditLogFactory.php
+    - database/migrations/2024_05_25_144216_create_users_table.php
+    - database/migrations/2024_05_25_144217_create_customers_table.php
+    - database/migrations/2024_05_25_144218_create_pharmacists_table.php
+    - database/migrations/2024_05_25_144219_create_medications_table.php
+    - database/migrations/2024_05_25_144220_create_prescriptions_table.php
+    - database/migrations/2024_05_25_144221_create_prescription__items_table.php
+    - database/migrations/2024_05_25_144222_create_inventories_table.php
+    - database/migrations/2024_05_25_144223_create_orders_table.php
+    - database/migrations/2024_05_25_144224_create_order_items_table.php
+    - database/migrations/2024_05_25_144225_create_suppliers_table.php
+    - database/migrations/2024_05_25_144226_create_shipments_table.php
+    - database/migrations/2024_05_25_144227_create_shipment_items_table.php
+    - database/migrations/2024_05_25_144228_create_payments_table.php
+    - database/migrations/2024_05_25_144229_create_billings_table.php
+    - database/migrations/2024_05_25_144230_create_roles_table.php
+    - database/migrations/2024_05_25_144231_create_permissions_table.php
+    - database/migrations/2024_05_25_144232_create_audit__logs_table.php
+    - app/Models/User.php
+    - app/Models/Customer.php
+    - app/Models/Pharmacist.php
+    - app/Models/Medication.php
+    - app/Models/Prescription.php
+    - app/Models/Prescription_Item.php
+    - app/Models/Inventory.php
+    - app/Models/Order.php
+    - app/Models/OrderItem.php
+    - app/Models/Supplier.php
+    - app/Models/Shipment.php
+    - app/Models/ShipmentItem.php
+    - app/Models/Payment.php
+    - app/Models/Billing.php
+    - app/Models/Role.php
+    - app/Models/Permissions.php
+    - app/Models/Audit_Log.php
+models:
+    User: { name: string, email: string, password: string, role: string, relationships: { hasOne: 'Customer, Pharmacist', hasMany: AuditLog } }
+    Customer: { user_id: 'unsignedInteger nullable', address: string, phone_number: integer, date_of_birth: date, relationships: { belongsTo: User, hasMany: 'Prescription, Order,Billing' } }
+    Pharmacist: { user_id: 'unsignedInteger nullable', license_number: string, employment_date: date, relationships: { belongsTo: User, hasMany: Prescription } }
+    Medication: { name: string, description: string, manufacturer: string, dosage_form: text, strength: string, price: float, relationships: { hasMany: 'PrescriptionItem, OrderItem, ShipmentItem', hasOne: Inventory } }
+    Prescription: { customer_id: 'unsignedInteger nullable', pharmacist_id: 'unsignedInteger nullable', prescription_date: date, doctor_name: string, total_amount: float, relationships: { belongsTo: 'Customer, Pharmacist', hasMany: PrescriptionItem } }
+    Prescription_Item: { prescription_id: 'unsignedInteger nullable', medication_id: 'unsignedInteger nullable', quantity: integer, dosage: integer, frequency: integer, relationships: { belongsTo: 'Prescription, Medication' } }
+    Inventory: { medication_id: 'unsignedInteger nullable', quantity_in_stock: string, reorder_level: string, relationships: { belongsTo: Medication } }
+    Order: { customer_id: 'unsignedInteger nullable', order_date: date, total_amount: integer, status: string, relationships: { belongsTo: Customer, hasMany: OrderItem, hasOne: 'Payment, Billing' } }
+    OrderItem: { order_id: 'unsignedInteger nullable', medication_id: 'unsignedInteger nullable', quantity: integer, price: integer, relationships: { belongsTo: 'Order, Medication' } }
+    Supplier: { name: string, contact_person: string, phone_number: integer, address: string, relationships: { hasMany: Shipment } }
+    Shipment: { supplier_id: 'unsignedInteger nullable', shipment_date: date, received_date: date, status: string, relationships: { belongsTo: Supplier, hasMany: ShipmentItem } }
+    ShipmentItem: { shipment_id: 'unsignedInteger nullable', medication_id: 'unsignedInteger nullable', quantity: integer, cost_price: integer, relationships: { belongsTo: 'Shipment, Medication' } }
+    Payment: { order_id: 'unsignedInteger nullable', payment_date: date, payment_method: string, amount: integer, relationships: { belongsTo: Order } }
+    Billing: { customer_id: 'unsignedInteger nullable', order_id: 'unsignedInteger nullable', total_amount: integer, billing_date: date, status: string, relationships: { belongsTo: 'Customer, Order' } }
+    Role: { role_name: string, relationships: { hasMany: Permission } }
+    Permissions: { role_id: 'unsignedInteger nullable', permission: string, relationships: { belongsTo: Role } }
+    Audit_Log: { user_id: 'unsignedInteger nullable', action: string, timestamp: date, description: string, relationships: { belongsTo: User } }

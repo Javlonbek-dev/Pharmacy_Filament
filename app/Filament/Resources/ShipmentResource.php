@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\ShipmentStatus;
 use App\Filament\Resources\ShipmentResource\Pages;
 use App\Filament\Resources\ShipmentResource\RelationManagers;
 use App\Models\Shipment;
@@ -10,8 +11,6 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ShipmentResource extends Resource
 {
@@ -22,17 +21,7 @@ class ShipmentResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('supplier_id')
-                    ->relationship('supplier', 'name'),
-                Forms\Components\DatePicker::make('shipment_date')
-                    ->required(),
-                Forms\Components\DatePicker::make('received_date')
-                    ->required(),
-                Forms\Components\TextInput::make('status')
-                    ->required()
-                    ->maxLength(255),
-            ]);
+            ->schema(Shipment::getForm());
     }
 
     public static function table(Table $table): Table
@@ -49,6 +38,10 @@ class ShipmentResource extends Resource
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
+                    ->color(function ($state){
+                        return ShipmentStatus::from($state)->getColor();
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,10 +14,10 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable();
+            $table->foreignIdFor(User::class)->nullable();
             $table->string('address');
-            $table->integer('phone_number');
-            $table->date('date_of_birth');
+            $table->string('phone_number');
+            $table->dateTime('date_of_birth');
             $table->timestamps();
         });
     }

@@ -22,30 +22,18 @@ class PrescriptionResource extends Resource
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                Forms\Components\Select::make('customer_id')
-                    ->relationship('customer', 'id'),
-                Forms\Components\Select::make('pharmacist_id')
-                    ->relationship('pharmacist', 'id'),
-                Forms\Components\DatePicker::make('prescription_date')
-                    ->required(),
-                Forms\Components\TextInput::make('doctor_name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('total_amount')
-                    ->required()
-                    ->numeric(),
-            ]);
+            ->schema(Prescription::getForm());
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('customer.id')
+                Tables\Columns\TextColumn::make('customer.user.name')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('pharmacist.id')
+                Tables\Columns\TextColumn::make('pharmacist.license_number')
+                    ->label('Pharmacist License Number')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('prescription_date')

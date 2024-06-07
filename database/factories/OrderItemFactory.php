@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
-use App\Models\;
+use App\Models\Medication;
 use App\Models\Order;
 use App\Models\OrderItem;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 class OrderItemFactory extends Factory
 {
@@ -24,9 +23,9 @@ class OrderItemFactory extends Factory
     {
         return [
             'order_id' => Order::factory(),
-            'medication_id' => ::factory(),
-            'quantity' => $this->faker->numberBetween(-10000, 10000),
-            'price' => $this->faker->numberBetween(-10000, 10000),
+            'medication_id' => Medication::factory(),
+            'quantity' => $this->faker->numberBetween(10000, 10000),
+            'price' => $this->faker->numberBetween(10000, 100000),
         ];
     }
 }

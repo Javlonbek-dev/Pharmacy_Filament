@@ -2,13 +2,13 @@
 
 namespace App\Enums;
 
-enum PayStatus: string
+enum BillingStatus: string
 {
 
     case Paid = 'Paid';
     case UnPaid = 'UnPaid';
 
-    public function getColor(): string
+    public function getColor()
     {
         return match ($this) {
             self::Paid => 'success',
@@ -16,3 +16,4 @@ enum PayStatus: string
         };
     }
 }
+

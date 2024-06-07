@@ -24,7 +24,7 @@ class InventoryFactory extends Factory
         return [
             'medication_id' => Medication::factory(),
             'quantity_in_stock' => $this->faker->word(),
-            'reorder_level' => $this->faker->word(),
+            'reorder_level' => $this->faker->numberBetween(1,50),
         ];
     }
 }
