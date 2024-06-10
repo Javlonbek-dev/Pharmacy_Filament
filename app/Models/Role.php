@@ -16,7 +16,7 @@ class Role extends Model
      * @var array
      */
     protected $fillable = [
-        'role_name',
+        'name',
     ];
 
     /**
@@ -30,6 +30,11 @@ class Role extends Model
 
     public function permissions(): HasMany
     {
-        return $this->hasMany(\App\Models\Permissions::class);
+        return $this->hasMany(Permissions::class);
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class);
     }
 }
